@@ -1,5 +1,7 @@
 package Spending;
 
+import Spending.model.DataCategories;
+import Spending.model.Transaction;
 import javafx.application.*;
 import javafx.scene.*;
 import javafx.stage.*;
@@ -111,6 +113,7 @@ public class SpendingFX extends Application {
                     commentary = comment.getText();
                     transaction = new Transaction(numCategories, sum, dateOfTr, commentary);
                     OutToExcel.createSheetHeader(myExcelBook, myExcelSheet, numRow, transaction);
+                    OutToDB.addValueIntoDB(transaction);
                     //SortExcel.sortSheet(myExcelBook, myExcelSheet);
                     root.getChildren().removeAll(label1, label2);
                     lvCategories.setValue("Выберите категорию расходов");

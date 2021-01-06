@@ -1,4 +1,4 @@
-package Spending;
+package Spending.model;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

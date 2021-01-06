@@ -1,5 +1,6 @@
 package Spending;
 
+import Spending.model.Transaction;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 
