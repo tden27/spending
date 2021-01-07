@@ -5,6 +5,7 @@ import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
@@ -45,26 +46,44 @@ class OutToExcel {
     }
 
     // заполнение строки (rowNum) определенного листа (sheet) данными  из dataModel
-    static void createSheetHeader(HSSFWorkbook workbook, HSSFSheet sheet1, int rowNum1, Transaction dataModel) {
-        Row row1 = sheet1.createRow(rowNum1);
-        row1.setHeightInPoints(15);
+    static void createSheetHeader(Transaction dataModel) {
+        // Создание файла Excel если он отсутствует
+        if (!new File("\\Программа учета расходов\\Spending\\Spending.xls").isFile()) OutToExcel.writeIntoExcel();
 
-        row1.createCell(0).setCellValue(dataModel.getCategory());
-        row1.getCell(0).setCellStyle(getSampleStyle1(workbook));
-        row1.createCell(1).setCellValue(dataModel.getSum());
-        row1.getCell(1).setCellStyle(getSampleStyle2(workbook));
-        row1.createCell(2).setCellValue(dataModel.getLocalDate());
-        row1.getCell(2).setCellStyle(getSampleStyle2(workbook));
-        row1.createCell(3).setCellValue(dataModel.getComment());
-        row1.getCell(3).setCellStyle(getSampleStyle1(workbook));
+        try {
+            File file = new File("\\Программа учета расходов\\Spending\\Spending.xls");
+            FileInputStream inputStream = new FileInputStream(file);
+            HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
+            HSSFSheet sheet1 = workbook.getSheet("Расходы");
+            int rowNum1 = sheet1.getLastRowNum(); // Определяем последнюю использованную строку
+            rowNum1++;
 
-        HSSFCreationHelper createHelper = workbook.getCreationHelper();
-        HSSFCellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd.MM.YYYY"));
+            Row row1 = sheet1.createRow(rowNum1);
+            row1.setHeightInPoints(15);
 
-        row1.createCell(5).setCellValue(new Date());
-        row1.getCell(5).setCellStyle(cellStyle);
+            row1.createCell(0).setCellValue(dataModel.getCategory());
+            row1.getCell(0).setCellStyle(getSampleStyle1(workbook));
+            row1.createCell(1).setCellValue(dataModel.getSum());
+            row1.getCell(1).setCellStyle(getSampleStyle2(workbook));
+            row1.createCell(2).setCellValue(dataModel.getLocalDate());
+            row1.getCell(2).setCellStyle(getSampleStyle2(workbook));
+            row1.createCell(3).setCellValue(dataModel.getComment());
+            row1.getCell(3).setCellStyle(getSampleStyle1(workbook));
 
+            HSSFCreationHelper createHelper = workbook.getCreationHelper();
+            HSSFCellStyle cellStyle = workbook.createCellStyle();
+            cellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd.MM.YYYY"));
+
+            row1.createCell(5).setCellValue(new Date());
+            row1.getCell(5).setCellStyle(cellStyle);
+
+            inputStream.close();
+            FileOutputStream outputStream = new FileOutputStream(file);
+            workbook.write(outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Установка стиля1 для строки

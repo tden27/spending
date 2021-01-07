@@ -1,6 +1,5 @@
 package Spending.model;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -8,13 +7,9 @@ import java.util.*;
 public class Transaction {
 
     // Категория транзакции
-    public static ArrayList<String> categories;
+    public static Map<Integer, String> categories;
     static {
-        try {
-            categories = DataCategories.dataCategory();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        categories = DataCategories.dataCategory();
     }
 
     private int numCat;    // Номер категории транзакции
